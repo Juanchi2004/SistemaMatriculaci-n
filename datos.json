@@ -1,0 +1,33 @@
+{
+    "S1UC1":
+    {
+        "nombre": "Matematica Avanzada",
+        "code": "S1UC1",
+        "ucPrevias": null,
+        "creditos": 10
+    },
+    
+    "S1UC2":
+    {
+        "nombre": "Quimica organica",
+        "code": "S1UC2",
+        "ucPrevias": null,
+        "creditos": 10
+    },
+
+    "S2UC1":
+    {
+        "nombre": "Quimica analitica",
+        "code": "S2UC1",
+        "ucPrevias": ["S1UC1","S1UC2"],
+        "creditos": 10
+    },
+
+    "S2UC2":
+    {
+        "nombre": "Fisica avanzada",
+        "code": "S2UC2",
+        "ucPrevias": ["S1UC1","S1UC2"],
+        "creditos": 10
+    }
+}
