@@ -4,33 +4,25 @@ from PlanDeEstudio import *
 # ibio2026 = PdE()
 # matAvanzada = Uc()
 
-juanchi = SdM.Estudiante("juan", "etchart", 54852194, 2022)
-secretaria = SdM.Secretaria()
+plan = IBIO2026(ruta="Sistema dematriculaciones paraIngeniería Biomédica v2.0/datos.json", codigoPlan="IBIO2026")
 
-plan = IBIO2026(ruta="C:/Users/juanc/OneDrive/Desktop/UTEC/7°moSemestre/ProgramacionAvanzada/Sistema dematriculaciones paraIngeniería Biomédica v2.0/datos.json")
+juanchi = SdM.Estudiante("juan", "etchart", 54852194, 2022, plan)
+# josecito = SdM.Estudiante("gabo", "ferrer", 12345678, 2020, plan)
+# anita = SdM.Estudiante("Anna", "Caballero", 65487917, 2022, plan)
+# morocho = SdM.Estudiante("Ignacio", "Rivero", 54887917, 2022, plan)
 
-# print(juanchi.getCi())
-
-secretaria.matricularUC(juanchi, plan, "S1UC1", "S1UC2", "S2UC1")
-
-# print(juanchi.getUC())
-
-# secretaria.desmatricularUC(juanchi, "S1UC1")
-
-# print(juanchi.getUC())
+secretaria = SdM.Secretaria("Jessica", "Arocena")
 
 
-# print(juanchi.getUC())
-# print((plan.semestresUC()))
+secretaria.matricularUC(juanchi, plan, "S1UC1","S1UC2")
 
-# juanchi.matricularUC(plan, "S1UC1", "S1UC2", "S2UC1")
-# print(juanchi.getUC())
-# juanchi.inscripcionExamen("S1UC1", "S1UC2")
-# print(juanchi.getUC())
+# secretaria.desmatricularUC(juanchi, "S1UC2")
+# secretaria.inscripcionExamen(juanchi, "S1UC1")
+# secretaria.desinscripcionExamen(juanchi, "S1UC1")
+# # secretaria.matricularUC(josecito, plan, "S1UC1")
+# # secretaria.matricularUC(anita, plan, "S1UC1")
+# # secretaria.matricularUC(morocho, plan, "S1UC1", "S1UC2")
 
-# codigoUC="S1UC1"
-# ruta = codigoUC+"-ExamenUC.txt"
+# secretaria.desmatricularUC(josecito, "S1UC1")
 
-# with open(ruta, "a") as file:
-#     file.write("hola como estas \n")
-#     file.write("45665432112\n")
+SdM.SistemaDeMatriculacion._editarUC_escolaridad(juanchi)
