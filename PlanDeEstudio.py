@@ -21,11 +21,11 @@ class IBIO2026():
     DOCUMENTAR
     -
     """
-    def __init__(self, ruta):
+    def __init__(self, ruta, codigoPlan:str):
         
         self.ruta = ruta
         self.unidades_curriculares = self.__cargarPlan()
-        
+        self.codigoPlan = codigoPlan
     
     def __cargarPlan(self):
 
