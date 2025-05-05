@@ -1,33 +1,89 @@
 {
     "S1UC1":
     {
-        "nombre": "Matematica Avanzada",
+        "nombre": "Algebra, Análisis y Geometría Analítica",
         "code": "S1UC1",
         "ucPrevias": null,
-        "creditos": 10
+        "creditos": 8
     },
     
     "S1UC2":
     {
-        "nombre": "Quimica organica",
+        "nombre": "Mecánica, Ondas y Calor",
         "code": "S1UC2",
         "ucPrevias": null,
         "creditos": 10
     },
 
+    "S1UC3":
+    {
+        "nombre": "Química General e Inorgánica",
+        "code": "S1UC3",
+        "ucPrevias": null,
+        "creditos": 9
+    },
+
+    "S1UC4":
+    {
+        "nombre": "Taller Inicial de Tecnologías",
+        "code": "S1UC4",
+        "ucPrevias": null,
+        "creditos": 8
+    },
+
+    "S1UC5":
+    {
+        "nombre": "Salud & Sociedad",
+        "code": "S1UC5",
+        "ucPrevias": null,
+        "creditos": 8
+    },
+
+    "S1UC6":
+    {
+        "nombre": "Inglés 1",
+        "code": "S1UC6",
+        "ucPrevias": null,
+        "creditos": 4
+    },
+
     "S2UC1":
     {
-        "nombre": "Quimica analitica",
+        "nombre": "Números Complejos y Ecuaciones Diferenciales",
         "code": "S2UC1",
-        "ucPrevias": ["S1UC1","S1UC2"],
-        "creditos": 10
+        "ucPrevias": ["S1UC1"],
+        "creditos": 8
     },
 
     "S2UC2":
     {
-        "nombre": "Fisica avanzada",
+        "nombre": "Electricidad y Magnetismo",
         "code": "S2UC2",
         "ucPrevias": ["S1UC1","S1UC2"],
         "creditos": 10
+    },
+
+    "S2UC3":
+    {
+        "nombre": "Química Orgánica y Biológica",
+        "code": "S2UC3",
+        "ucPrevias": ["S1UC3"],
+        "creditos": 8
+    },
+
+    "S2UC4":
+    {
+        "nombre": "Anatomía y Fisiología Humanas",
+        "code": "S2UC4",
+        "ucPrevias": ["S1UC2", "S1UC5"],
+        "creditos": 8
+    },
+
+    "S2UC5":
+    {
+        "nombre": "Inglés 2",
+        "code": "S2UC5",
+        "ucPrevias": null,
+        "creditos": 8
     }
 }
