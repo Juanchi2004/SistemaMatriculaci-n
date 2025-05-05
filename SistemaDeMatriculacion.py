@@ -37,7 +37,7 @@ class Estudiante():
 
         self.uc =  expediente[str(self._ci)]["UC"]
                     #diccionario donde la key corresponde al codigo de la uc el valor corresponde al estado de la uc
-                    #Donde: "Examen" UC en examen, "Cursando" UC en curso, "Aprobada" UC aprobada.
+                    #Donde: "Examen" UC en examen, "Cursando" UC en curso, "Aprobado" UC aprobada.
         
     
     
@@ -56,58 +56,14 @@ class Estudiante():
         Documentar
         -
         """
-
-        
-        # listaUcPlan = planEstudio.unidades_curriculares.keys()
-        # if ucMatriculada in listaUcPlan:
-
-        for codigoUC in ucMatriculada:
-
-                sinPrevias = True
-                listaPrevias = planEstudio.unidades_curriculares[codigoUC].previasUC
-                
-                if  listaPrevias == None:
-                    self.uc[codigoUC] = "Cursando"
-                    continue
-
-                for codigoPrevia in listaPrevias:
-
-                    if self.uc[codigoPrevia] == "Aprobada":
-                        print("hasta aqui bien, la previa se encuentra aprobada")
-                        continue #debería de continuar con el siguiente codigo de la lista de previas
-                    else:
-                        nombreUC, nombrePrevia = planEstudio.nombreUC(codigoUC,codigoPrevia)
-                        print(f"la UC {codigoUC,nombreUC} tiene como previa {codigoPrevia,nombrePrevia}")
-                        print(f"ó {codigoPrevia, nombrePrevia} está en {self.uc[codigoPrevia]}")
-                        sinPrevias = False
-                        break  
-
-                if sinPrevias:        
-                    self.uc[codigoUC] = "Cursando"
-                else:
-                    print("IMPLEMENTAR UN ERROR QUE NO PERMITA MATRICULAR")
-                # self.uc[codigoUC] = "Aprobada"
-        
-        # else:
-        #     print("las unidades curriculares no se encuentran dentro del plan de estudio")
-        #Agregar estudiante al txt "codigoUC-cursandoUC.txt"
-        pass
+        return SistemaDeMatriculacion.matricularUC(self, planEstudio, ucMatriculada)
     
     def inscripcionExamen(self, *ucExamen:str):
         """
         Inscripción a examen
         -
         """
-
-        for codigoUC in ucExamen:        
-            if codigoUC in self.getUC(estado = False) and self.uc[codigoUC] != "Aprobada":
-                self.uc[codigoUC] = "Examen"
-                #Agregar estudiante al txt "codigoUC-examenUC.txt"
-            else:
-                print("La uc no se encuentra dentro de su lista de ucs o ya se encuentra aprobada")
-            
-        
-        pass
+        return SistemaDeMatriculacion.inscripcionExamen(self, ucExamen)
 
 
     
@@ -123,11 +79,7 @@ class Secretaria():
         """
         ucaprobadas contiene los codigos de las ucs correspondientes al plan de estudio.
         """
-        for codigoUC in ucaprobada:
-            if codigoUC in estudiante.getUC(estado=False):
-                estudiante.uc[codigoUC] = "Aprobado"
-            else:
-                print(f"la UC {codigoUC} no fue cursada")
+        return SistemaDeMatriculacion.apruebaUC(estudiante, ucaprobada)
 
         #Eliminar estudiante del txt "codigoUC-CursandoUC.csv"
         #IMPLEMENTARLO BIEN
@@ -161,7 +113,19 @@ class Secretaria():
         """
         return SistemaDeMatriculacion.desinscripcionExamen(estudiante, ucQuitar)
 
-
+    def getCursandoUC(self, codigoUC:str):
+        """
+        DOCUMENTAR:
+        -
+        """
+        return SistemaDeMatriculacion.getCursandoUC(codigoUC)
+    
+    def getExamenUC(self, codigoUC:str):
+        """
+        DOCUMENTAR:
+        -
+        """
+        return SistemaDeMatriculacion.getExamenUC(codigoUC)        
 
 class Coordinador():
     def __init__(self, nombre:str, apellido:str):
@@ -204,24 +168,25 @@ class SistemaDeMatriculacion():
             if listaPrevias == None:
                 estudiante.uc[codigoUC] = "Cursando"
                 SistemaDeMatriculacion._csvCursandoUC(estudiante=estudiante, ucCode=codigoUC)
+                SistemaDeMatriculacion._editarUC_escolaridad(estudiante)
                 #escriba en el csv correspondiente a la UC y al estudiante
                 continue
 
             for codigoPrevia in listaPrevias: #Verificacion de la las previas (podria hacerse en una funcion _Validar uc)
 
-                if estudiante.uc[codigoPrevia] == "Aprobada":
-                    print("hasta aqui bien, previa aprobada")
+                if estudiante.uc[codigoPrevia] == "Aprobado":
                     continue
                 else:
                     nombreUC, nombrePrevia = planEstudio.nombreUC(codigoUC,codigoPrevia)
                     print(f"la UC {codigoUC,nombreUC} tiene como previa {codigoPrevia,nombrePrevia}")
                     print(f"ó {codigoPrevia, nombrePrevia} está en {estudiante.uc[codigoPrevia]}")
                     sinPrevias = False
-                    break
+                    break #Se devería arrojar un error aqui para justamente cortar el avance del programa.
             
             if sinPrevias:        
                 estudiante.uc[codigoUC] = "Cursando"
                 SistemaDeMatriculacion._csvCursandoUC(estudiante=estudiante, ucCode=codigoUC)
+                SistemaDeMatriculacion._editarUC_escolaridad(estudiante)
 
             else:
                 print("IMPLEMENTAR UN ERROR QUE NO PERMITA MATRICULAR")
@@ -238,16 +203,33 @@ class SistemaDeMatriculacion():
 
         for codigoUC in ucDesmatriculada:
 
-            if codigoUC in estudiante.getUC(estado=False) and estudiante.uc[codigoUC] != "Aprobado":
+            if codigoUC in estudiante.getUC(estado=False) and estudiante.uc[codigoUC] == "Cursando":
 
-                estudiante.uc.pop(codigoUC)
+                del estudiante.uc[codigoUC]
                 SistemaDeMatriculacion._csvCursandoUC(estudiante=estudiante, ucCode=codigoUC, borrar=True)
+                SistemaDeMatriculacion._editarUC_escolaridad(estudiante)
                 #Eliminar al estudiante del txt "codigoUC-cursandoUC-nombreUC.txt"
             else:
                 print(f"La UC {codigoUC} no se encuentra matriculada al estudiante")
                 return False
                 #IMPLEMENTAR ERROR
         return True
+
+    @classmethod
+    def apruebaUC(cls, estudiante:Estudiante, ucaprobada:tuple):
+        """
+        ucaprobadas contiene los codigos de las ucs correspondientes al plan de estudio.
+        """
+        for codigoUC in ucaprobada:
+            if codigoUC in estudiante.getUC(estado=False):
+                estudiante.uc[codigoUC] = "Aprobado"
+                SistemaDeMatriculacion._editarUC_escolaridad(estudiante)
+                SistemaDeMatriculacion._csvCursandoUC(estudiante, codigoUC, borrar=True)
+            else:
+                print(f"la UC {codigoUC} no fue cursada")
+
+        #Eliminar estudiante del txt "codigoUC-CursandoUC.csv"
+        #IMPLEMENTARLO BIEN
 
     @classmethod
     def inscripcionExamen(cls, estudiante: Estudiante, ucExamen:tuple):
@@ -257,9 +239,10 @@ class SistemaDeMatriculacion():
         """
 
         for codigoUC in ucExamen:        
-            if codigoUC in estudiante.getUC(estado = False) and estudiante.uc[codigoUC] != "Aprobada":
+            if codigoUC in estudiante.getUC(estado = False) and estudiante.uc[codigoUC] != "Aprobado":
                 estudiante.uc[codigoUC] = "Examen"
                 SistemaDeMatriculacion._csvExamenUC(estudiante=estudiante, ucCode=codigoUC)
+                SistemaDeMatriculacion._editarUC_escolaridad(estudiante)
                 #Adaptarlo al csv
             else:
                 print("La UC no se encuentra dentro de su lista de ucs o ya se encuentra aprobada")
@@ -279,6 +262,7 @@ class SistemaDeMatriculacion():
 
                 estudiante.uc[codigoUC] = "Cursando"
                 SistemaDeMatriculacion._csvExamenUC(estudiante, codigoUC, borrar = True)
+                SistemaDeMatriculacion._editarUC_escolaridad(estudiante)
                 #Quitar estudiante del txt "codigoUC-examenUC.txt" 
             
             else:
@@ -287,7 +271,25 @@ class SistemaDeMatriculacion():
                 #Implementar aviso(?)
         
         return True
+
+    @classmethod
+    def getCursandoUC(cls, codigoUC:str):
+        
+        from csv import reader
+        ruta = codigoUC + "-CursandoUC.csv"
+        with open(ruta, "r") as file:
+            file = list(reader(file,delimiter=","))
+        return file
     
+    @classmethod
+    def getExamenUC(cls, codigoUC:str):
+        
+        from csv import reader
+        ruta = codigoUC + "-ExamenUC.csv"
+        with open(ruta, "r") as file:
+            file = list(reader(file,delimiter=","))
+        return file
+
     @classmethod
     def _csvCursandoUC(cls, estudiante: Estudiante, ucCode:str, borrar:bool = False):
         """
@@ -326,7 +328,7 @@ class SistemaDeMatriculacion():
                     # escritor.writerows(lectura_archivo)
 
             else: 
-                print(f"CI:({estudiante.getCi()}).No se pudo realizar la acción sobre la UC {ucCode}")
+                print(f"CI:({estudiante.getCi()}).No se pudo realizar la acción sobre el CSV-cursandoUC de la UC {ucCode}")
         
         #IMPLEMENTAR EL ESTADO=False PARA ELIMINAR EL ESTUDIANTE DEL CSV
         #Demasiado engorrozo pero funciona (por lo menos hasta ahora je)
@@ -369,7 +371,7 @@ class SistemaDeMatriculacion():
                     # escritor.writerows(lectura_archivo)
 
             else: 
-                print(f"CI:({estudiante.getCi()}).No se pudo realizar la acción sobre la UC {ucCode}")
+                print(f"CI:({estudiante.getCi()}).No se pudo realizar la acción sobre el CSV-examen de la UC {ucCode}")
         
         #IMPLEMENTAR EL ESTADO=False PARA ELIMINAR EL ESTUDIANTE DEL CSV
         #Demasiado engorrozo pero funciona (por lo menos hasta ahora je)
@@ -410,16 +412,17 @@ class SistemaDeMatriculacion():
         
         ruta = estudiante.getCi()+"-ESCOLARIDAD-"+estudiante.nombre[0]+"-"+estudiante.apellido+".json"
 
-        with open(ruta, "r+") as file:
-            fileLoad = json.load(file)
-            fileLoad[estudiante.getCi()]["UC"] = estudiante.getUC()
-            file.seek(0)
-            
-            json.dump(fileLoad, file, indent=4)  
-            file.flush()
-            file.seek(0)
-            
-            fileLoad = json.load(file)
-            print(fileLoad)            
-
+        try:
+            with open(ruta, "r+") as file:
+                fileLoad = json.load(file)
+                fileLoad[estudiante.getCi()]["UC"] = estudiante.getUC()
+                file.seek(0) #coloco el cursor en el punto cero
+                
+                json.dump(fileLoad, file, indent=4)  
+                file.truncate()
+                file.seek(0)
+                
+                # fileLoad = json.load(file)
+        except:
+            print(f"Algo inesperado ha ocurrido al editar el expediente:{ruta}")
         pass
