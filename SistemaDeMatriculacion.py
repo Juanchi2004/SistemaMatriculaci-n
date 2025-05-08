@@ -1,4 +1,4 @@
-##Trabajo realizado por Juan Etchart.
+##Trabajo realizado por Juan Etchart - Gabriel Ferrer.
 ##Módulos 4, 5 y 6
 
 from PlanDeEstudio import Plan_De_Estudio
