@@ -1,4 +1,4 @@
-##Trabajo realizado por Juan Luis Etchart, Gabriel Ferrer
+##Trabajo realizado por Juan Luis Etchart y Gabriel Ferrer
 ##Implementación de la clase UnidadCurricular
 
 class UnidadCurricular():
